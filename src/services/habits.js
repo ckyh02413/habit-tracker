@@ -1,10 +1,5 @@
 import { pool } from "../db.js";
-import {
-  HttpError,
-  ConflictError,
-  NotFoundError,
-  ValidationError,
-} from "../errors.js";
+import { ConflictError, NotFoundError, ValidationError } from "../errors.js";
 export async function createHabit(userId, name, targetPerWeek) {
   try {
     const result = await pool.query(
