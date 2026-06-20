@@ -8,6 +8,11 @@ import {
   updateHabit,
   deleteHabit,
 } from "../services/habits.js";
+import {
+  getCurrentStreak,
+  getLongestStreak,
+  getHeatmap,
+} from "../services/stats.js";
 import { authMiddleware } from "../middleware/auth.js";
 
 const router = Router();
@@ -76,6 +81,23 @@ router.delete(
       throw new ValidationError("invalid id");
     await deleteHabit(userId, id);
     res.status(204).end();
+  }),
+);
+
+router.get(
+  "/:id/stats",
+  authMiddleware,
+  asyncH(async (req, res) => {
+    const userId = req.userId;
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id) || id <= 0)
+      throw new ValidationError("invalid id");
+    const [current_streak, longest_streak, heatmap] = await Promise.all([
+      getCurrentStreak(userId, id),
+      getLongestStreak(userId, id),
+      getHeatmap(userId, id),
+    ]);
+    res.json({ current_streak, longest_streak, heatmap });
   }),
 );
 

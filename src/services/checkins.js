@@ -9,6 +9,7 @@ export async function createCheckin(userId, habitId, date) {
       [habitId, date ?? null, userId],
     );
     if (result.rows.length === 0) throw new NotFoundError("habit not found");
+
     return result.rows[0];
   } catch (err) {
     if (err.code === "23505")
